@@ -41,7 +41,7 @@ app.post('/exercises', (req, res) => {
   res.json(calculateExercise(hours, Number(target)));
 });
 
-const PORT = 3003;
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
