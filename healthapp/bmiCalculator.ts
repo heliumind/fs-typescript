@@ -1,4 +1,4 @@
-import { parseBmiArguments } from './utils';
+import { parseBmiArguments } from './utils.ts';
 
 const calculateBmi = (height: number, weight: number): string => {
   const height_cm = height / 100;
@@ -13,7 +13,7 @@ const calculateBmi = (height: number, weight: number): string => {
 };
 
 try {
-  if (require.main === module) {
+  if (process.argv[1] === import.meta.filename) {
     const { value1, value2 } = parseBmiArguments(process.argv);
     console.log(calculateBmi(value1, value2));
   }

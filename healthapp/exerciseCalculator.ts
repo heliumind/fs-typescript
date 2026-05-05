@@ -1,4 +1,4 @@
-import { parseExArguments } from './utils';
+import { parseExArguments } from './utils.ts';
 
 interface Result {
   periodLength: number;
@@ -42,7 +42,7 @@ export const calculateExercise = (hours: number[], target: number): Result => {
 };
 
 try {
-  if (require.main === module) {
+  if (process.argv[1] === import.meta.filename) {
     const { target, hours } = parseExArguments(process.argv);
     console.log(calculateExercise(hours, target));
   }

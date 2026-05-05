@@ -1,6 +1,6 @@
 import express from 'express';
-import { calculateBmi } from './bmiCalculator';
-import { calculateExercise } from './exerciseCalculator';
+import { calculateBmi } from './bmiCalculator.ts';
+import { calculateExercise } from './exerciseCalculator.ts';
 
 const app = express();
 
@@ -22,6 +22,7 @@ app.get('/bmi', (req, res) => {
 });
 
 app.post('/exercises', (req, res) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { target, daily_exercises } = req.body;
 
   if (!target || !daily_exercises) {
@@ -30,7 +31,7 @@ app.post('/exercises', (req, res) => {
     });
   }
 
-  const hours: number[] = daily_exercises.map(Number);
+  const hours: number[] = (daily_exercises as unknown[]).map(Number);
 
   if (isNaN(Number(target)) || hours.some(isNaN)) {
     res.status(400).json({
