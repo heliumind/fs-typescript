@@ -1,11 +1,26 @@
 import { v1 as uuid } from 'uuid';
 import patientsData from '../../data/patients.ts';
-import type { NewPatient, Patient, PatientNonPII } from '../types.ts';
-import { toNewPatient } from '../utils.ts';
+import type {
+  NewPatient,
+  Patient,
+  PatientNonPII,
+  NewEntry,
+  Entry,
+} from '../types.ts';
+import { toNewPatient, toNewEntry } from '../utils.ts';
 
 const patients: Patient[] = patientsData.map((p) => {
   const patient = toNewPatient(p) as Patient;
   patient.id = p.id;
+
+  patient.entries = (p.entries ?? []).map((e) => {
+    const entry = toNewEntry(e) as Entry;
+
+    entry.id = e.id;
+
+    return entry;
+  });
+
   return patient;
 });
 
@@ -23,9 +38,14 @@ const getPatiensNonPII = (): PatientNonPII[] => {
   }));
 };
 
+const findById = (id: string): Patient | undefined => {
+  return patients.find((p) => p.id === id);
+};
+
 const addPatient = (patient: NewPatient): Patient => {
   const newPatient = {
     id: uuid(),
+    entries: [],
     ...patient,
   };
 
@@ -33,4 +53,25 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
-export default { getPatients, getPatiensNonPII, addPatient };
+const addEntry = (patientId: string, entry: NewEntry): Entry | undefined => {
+  const patient = patients.find((p) => p.id === patientId);
+  if (!patient) {
+    return undefined;
+  }
+
+  const newEntry: Entry = {
+    id: uuid(),
+    ...entry,
+  };
+
+  patient.entries.push(newEntry);
+  return newEntry;
+};
+
+export default {
+  getPatients,
+  getPatiensNonPII,
+  findById,
+  addPatient,
+  addEntry,
+};
